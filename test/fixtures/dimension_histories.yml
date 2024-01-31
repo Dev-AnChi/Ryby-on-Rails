@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  datetime: 2024-01-31 18:44:56
+  mac_address: MyString
+  result_code: 1
+  result_name: MyString
+  width: MyString
+  length: MyString
+  height: MyString
+  weight: MyString
+
+two:
+  datetime: 2024-01-31 18:44:56
+  mac_address: MyString
+  result_code: 1
+  result_name: MyString
+  width: MyString
+  length: MyString
+  height: MyString
+  weight: MyString

@@ -1,0 +1,2 @@
+class DimensionHistory < ApplicationRecord
+end

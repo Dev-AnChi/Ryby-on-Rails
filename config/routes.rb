@@ -7,4 +7,15 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  # config/routes.rb
+  resources :dimension_histories do
+    collection do
+      post 'get_dimensions'
+    end
+  end
+
+  # ... your other routes ...
+  root 'dimension_histories#index'
+
 end
