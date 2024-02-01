@@ -15,7 +15,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # ... your other routes ...
   root 'dimension_histories#index'
 
 end

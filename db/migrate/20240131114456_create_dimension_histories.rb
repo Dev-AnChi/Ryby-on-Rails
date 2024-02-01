@@ -1,6 +1,7 @@
 class CreateDimensionHistories < ActiveRecord::Migration[7.1]
   def change
-    create_table :dimension_histories, id: :uuid do |t|
+    create_table :dimension_histories, id: false do |t|
+      t.bigint :id, primary_key: true
       t.string :url
       t.datetime :datetime
       t.string :mac_address
@@ -11,7 +12,8 @@ class CreateDimensionHistories < ActiveRecord::Migration[7.1]
       t.string :height
       t.string :weight
 
-      t.timestamps
+      # Thêm cấu hình cho cột id
+      t.timestamps default: -> { 'CURRENT_TIMESTAMP' }
     end
   end
 end
