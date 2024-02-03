@@ -23,5 +23,13 @@ module RubyOnRails
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Thêm cấu hình CORS
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*' # Cho phép yêu cầu từ mọi nơi, có thể thay '*' bằng domain của trang web của bạn.
+        resource '*', headers: :any, methods: [:get, :post, :options] # Cho phép các phương thức và headers cụ thể
+      end
+    end
   end
 end

@@ -1,67 +1,69 @@
-<!-- app/views/dimension_histories/index.html.erb -->
+<div class="container mt-4">
+  <h1>Form</h1>
 
-<h1 class="mt-4">Form</h1>
+  <%= form_tag({ controller: 'dimension_histories', action: 'get_dimensions' }, method: 'get', class: 'mb-4', remote: true, id: 'dimension-history-form') do %>
+    <div class="row">
+      <div class="col-md-3 mb-2">
+        <%= label_tag 'url', 'URL:', class: 'form-label' %>
+        <%= text_field_tag 'url', nil, class: 'form-control' %>
+      </div>
 
-<%= form_tag({ controller: 'dimension_histories', action: 'get_dimensions' }, method: 'post', class: 'mb-4') do %>
-  <div class="row">
-    <div class="col-md-3 mb-2">
-      <%= label_tag 'url', 'URL:', class: 'form-label' %>
-      <%= text_field_tag 'url', nil, class: 'form-control' %>
+      <div class="col-md-3 mb-2">
+        <%= label_tag 'height', 'Height:', class: 'form-label' %>
+        <%= text_field_tag 'height', nil, class: 'form-control' %>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= label_tag 'width', 'Width:', class: 'form-label' %>
+        <%= text_field_tag 'width', nil, class: 'form-control' %>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= label_tag 'length', 'Length:', class: 'form-label' %>
+        <%= text_field_tag 'length', nil, class: 'form-control' %>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <%= label_tag 'weight', 'Weight:', class: 'form-label' %>
+        <%= text_field_tag 'weight', nil, class: 'form-control' %>
+      </div>
+
+      <div class="col-md-3">
+        <%= submit_tag 'Get Dimensions', class: 'btn btn-primary' %>
+      </div>
     </div>
+  <% end %>
 
-    <div class="col-md-3 mb-2">
-      <%= label_tag 'height', 'Height:', class: 'form-label' %>
-      <%= text_field_tag 'height', nil, class: 'form-control' %>
-    </div>
-
-    <div class="col-md-3 mb-2">
-      <%= label_tag 'width', 'Width:', class: 'form-label' %>
-      <%= text_field_tag 'width', nil, class: 'form-control' %>
-    </div>
-
-    <div class="col-md-3 mb-2">
-      <%= label_tag 'length', 'Length:', class: 'form-label' %>
-      <%= text_field_tag 'length', nil, class: 'form-control' %>
-    </div>
-
-    <div class="col-md-3 mb-2">
-      <%= label_tag 'weight', 'Weight:', class: 'form-label' %>
-      <%= text_field_tag 'weight', nil, class: 'form-control' %>
-    </div>
-
-    <div class="col-md-3">
-      <%= submit_tag 'Get Dimensions', class: 'btn btn-primary' %>
-    </div>
+  <!-- Hiển thị kết quả API -->
+  <div id="result-section" class="mt-4">
+    <%# hiển thị api_result ở đây %>
   </div>
-<% end %>
 
-<!-- Thêm phần hiển thị kết quả nếu có -->
-<% if @dimension_history %>
-  <h2 class="mt-4">Result:</h2>
-  <p><%= @dimension_history.to_json %></p>
-<% end %>
+  <!-- Bảng Dimension Histories -->
+  <div id="dimension-history-table">
+    <%= render partial: 'dimension_histories/table' %>
+  </div>
+</div>
 
-<h1 class="mt-4">Dimension Histories</h1>
+<script>
+  $(document).ready(function() {
+    $('#dimension-history-form').on('submit', function(event) {
+      event.preventDefault();
 
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Datetime</th>
-      <th>Mac Address</th>
-      <th>Result Code</th>
-      <!-- Thêm các cột khác tương ứng với model DimensionHistory -->
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @dimension_histories.each do |dimension_history| %>
-      <tr>
-        <td><%= dimension_history.datetime %></td>
-        <td><%= dimension_history.mac_address %></td>
-        <td><%= dimension_history.result_code %></td>
-        <!-- Thêm các cột khác tương ứng với model DimensionHistory -->
-        <td><%= link_to 'Show', dimension_history, class: 'btn btn-secondary btn-sm' %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      $.ajax({
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        dataType: 'script', // Thêm dòng này để chỉ định loại dữ liệu mong đợi là JavaScript
+        success: function(response) {
+          // Cập nhật bảng trực tiếp trên trang index
+          $('#dimension-history-table').html(response);
+        },
+        error: function() {
+          alert('Lỗi khi gửi biểu mẫu.');
+        }
+      });
+    });
+  });
+
+</script>

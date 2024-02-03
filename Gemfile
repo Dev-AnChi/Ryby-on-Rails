@@ -4,6 +4,9 @@ ruby "3.2.3"
 
 gem 'psych', '~> 3.3'
 
+gem 'rack-cors'
+
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3"
 

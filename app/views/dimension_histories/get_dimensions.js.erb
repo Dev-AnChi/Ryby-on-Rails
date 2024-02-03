@@ -1,0 +1,14 @@
+<script>
+    // Cập nhật giá trị api_result
+    var apiResult = <%= @api_result.to_json.html_safe %>;
+
+    // In ra giá trị để kiểm tra trong console log
+    console.log('API Result:', apiResult);
+
+    // Cập nhật phần kết quả
+    $('#result-section').html('<h2>Kết quả:</h2><pre>' + apiResult + '</pre>');
+
+    // Cập nhật bảng trực tiếp trên trang index
+    $('#dimension-history-table').html('<%= j render partial: "dimension_histories/table" %>');
+
+</script>

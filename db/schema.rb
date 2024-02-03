@@ -11,7 +11,18 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_01_31_114456) do
-# Could not dump table "dimension_histories" because of following StandardError
-#   Unknown type 'uuid' for column 'id'
+  create_table "dimension_histories", force: :cascade do |t|
+    t.string "url"
+    t.datetime "datetime"
+    t.string "mac_address"
+    t.integer "result_code"
+    t.string "result_name"
+    t.string "width"
+    t.string "length"
+    t.string "height"
+    t.string "weight"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+  end
 
 end
