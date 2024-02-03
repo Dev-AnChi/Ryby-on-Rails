@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # config/routes.rb
   resources :dimension_histories do
     collection do
-      post 'get_dimensions'
+      get 'get_dimensions'
     end
   end
 

@@ -36,8 +36,8 @@ class DimensionHistoriesController < ApplicationController
     # Hiển thị JSON đẹp mắt
     @api_result = api_result.present? ? JSON.pretty_generate(api_result) : nil
     respond_to do |format|
-      format.html
-      format.json { render json: @api_result }
+      format.json { render json: @api_result }  # Sửa lại để trả về @api_result
+      format.js   # Phản hồi định dạng JavaScript
     end
   rescue StandardError => e
     # Ghi log cho lỗi
