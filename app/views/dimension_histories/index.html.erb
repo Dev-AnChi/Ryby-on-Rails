@@ -1,69 +1,74 @@
-<div class="container mt-4">
+<div class="container mt-4" data-controller="form">
   <h1>Form</h1>
 
-  <%= form_tag({ controller: 'dimension_histories', action: 'get_dimensions' }, method: 'get', class: 'mb-4', remote: true, id: 'dimension-history-form') do %>
+  <%= form_with(url: get_dimensions_dimension_histories_path, method: :get, id: "dimension-history-form", 
+  data: { controller: "dimension-form", action: "submit->dimension-form#submit" }, class: "mb-4") do |form| %>   
     <div class="row">
-      <div class="col-md-3 mb-2">
-        <%= label_tag 'url', 'URL:', class: 'form-label' %>
-        <%= text_field_tag 'url', nil, class: 'form-control' %>
+      <div class="col-md-12 mb-2">
+        <div class="form-group">
+          <%= form.label :url, "URL:", class: "form-label" %>
+          <%= form.text_field :url, class: "form-control", data: { target: "form.url" } %>
+          <div id="url-error" class="text-danger"></div>
+        </div>
       </div>
 
-      <div class="col-md-3 mb-2">
-        <%= label_tag 'height', 'Height:', class: 'form-label' %>
-        <%= text_field_tag 'height', nil, class: 'form-control' %>
+      <div class="col-md-6 mb-2">
+        <div class="form-group">
+          <%= form.label :height, "Height:", class: "form-label" %>
+          <%= form.text_field :height, class: "form-control", data: { target: "form.height" } %>
+          <div id="height-error" class="text-danger"></div>
+        </div>
       </div>
 
-      <div class="col-md-3 mb-2">
-        <%= label_tag 'width', 'Width:', class: 'form-label' %>
-        <%= text_field_tag 'width', nil, class: 'form-control' %>
+      <div class="col-md-6 mb-2">
+        <div class="form-group">
+          <%= form.label :width, "Width:", class: "form-label" %>
+          <%= form.text_field :width, class: "form-control", data: { target: "form.width" } %>
+          <div id="width-error" class="text-danger"></div>
+        </div>
       </div>
 
-      <div class="col-md-3 mb-2">
-        <%= label_tag 'length', 'Length:', class: 'form-label' %>
-        <%= text_field_tag 'length', nil, class: 'form-control' %>
+      <div class="col-md-6 mb-2">
+        <div class="form-group">
+          <%= form.label :length, "Length:", class: "form-label" %>
+          <%= form.text_field :length, class: "form-control", data: { target: "form.length" } %>
+          <div id="length-error" class="text-danger"></div>
+        </div>
       </div>
 
-      <div class="col-md-3 mb-2">
-        <%= label_tag 'weight', 'Weight:', class: 'form-label' %>
-        <%= text_field_tag 'weight', nil, class: 'form-control' %>
+      <div class="col-md-6 mb-2">
+        <div class="form-group">
+          <%= form.label :weight, "Weight:", class: "form-label" %>
+          <%= form.text_field :weight, class: "form-control", data: { target: "form.weight" } %>
+          <div id="weight-error" class="text-danger"></div>
+        </div>
       </div>
 
-      <div class="col-md-3">
-        <%= submit_tag 'Get Dimensions', class: 'btn btn-primary' %>
+      <div class="col-md-12">
+        <%= form.submit "Get Dimensions", class: "btn btn-primary" %>
       </div>
     </div>
   <% end %>
 
-  <!-- Hiển thị kết quả API -->
-  <div id="result-section" class="mt-4">
-    <%# hiển thị api_result ở đây %>
+  <!-- Display flash messages -->
+  <% if flash[:notice] %>
+    <div class="alert alert-success" role="alert">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger" role="alert">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <!-- Display API result -->
+  <div id="result-section" data-dimension-form-target="resultSection" class="mt-4">
+    <!-- Kết quả từ API sẽ được hiển thị ở đây -->
   </div>
+
 
   <!-- Bảng Dimension Histories -->
   <div id="dimension-history-table">
     <%= render partial: 'dimension_histories/table' %>
   </div>
 </div>
-
-<script>
-  $(document).ready(function() {
-    $('#dimension-history-form').on('submit', function(event) {
-      event.preventDefault();
-
-      $.ajax({
-        type: $(this).attr('method'),
-        url: $(this).attr('action'),
-        data: $(this).serialize(),
-        dataType: 'script', // Thêm dòng này để chỉ định loại dữ liệu mong đợi là JavaScript
-        success: function(response) {
-          // Cập nhật bảng trực tiếp trên trang index
-          $('#dimension-history-table').html(response);
-        },
-        error: function() {
-          alert('Lỗi khi gửi biểu mẫu.');
-        }
-      });
-    });
-  });
-
-</script>

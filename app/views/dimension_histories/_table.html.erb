@@ -1,35 +1,40 @@
-<!-- app/views/dimension_histories/_table.html.erb -->
-
-<h1 class="mt-4">Dimension Histories</h1>
-
-<!-- Bảng Dimension Histories -->
-<table class="table">
-  <thead>
-    <tr>
-      <th>URL</th>
-      <th>Datetime</th>
-      <th>Mac Address</th>
-      <th>Result Code</th>
-      <th>Result Name</th>
-      <th>Width</th>
-      <th>Length</th>
-      <th>Height</th>
-      <th>Weight</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @dimension_histories.each do |history| %>
+<div class="table-container">
+  <h1 class="mt-4">Dimension Histories</h1>
+  <table class="table">
+    <!-- Table header -->
+    <thead>
+      <!-- Table header rows -->
       <tr>
-        <td><%= history.url %></td>
-        <td><%= history.datetime %></td>
-        <td><%= history.mac_address %></td>
-        <td><%= history.result_code %></td>
-        <td><%= history.result_name %></td>
-        <td><%= history.width %></td>
-        <td><%= history.length %></td>
-        <td><%= history.height %></td>
-        <td><%= history.weight %></td>
+        <th>STT</th>
+        <th>URL</th>
+        <th>Datetime</th>
+        <th>Mac Address</th>
+        <th>Result Code</th>
+        <th>Result Name</th>
+        <th>Width</th>
+        <th>Length</th>
+        <th>Height</th>
+        <th>Weight</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <!-- Table body -->
+    <tbody>
+      <% @dimension_histories.each_with_index do |history, index| %>
+        <!-- Table body rows -->
+        <tr>
+          <!-- Table body columns -->
+          <td><%= index + 1 %></td>
+          <td><%= history.url %></td>
+          <td><%= history.datetime %></td>
+          <td><%= history.mac_address %></td>
+          <td><%= history.result_code %></td>
+          <td><%= history.result_name %></td>
+          <td><%= history.width %></td>
+          <td><%= history.length %></td>
+          <td><%= history.height %></td>
+          <td><%= history.weight %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
