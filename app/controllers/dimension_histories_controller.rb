@@ -1,18 +1,14 @@
-require 'json'
-
 class DimensionHistoriesController < ApplicationController
-  before_action :load_dimensions, only: [:index, :get_dimensions]
+  before_action :load_dimensions, only: [:index]
 
   def index
+    
   end
 
   def get_dimensions
-    # Tạo dữ liệu ngẫu nhiên từ các giá trị nhập vào
     api_result = generate_random_json(params[:height], params[:width], params[:length], params[:weight])
-
-    # Kiểm tra xem có kết quả hay không
+  
     if api_result.present?
-      # Lưu kết quả vào bảng DimensionHistory
       @dimension_history = DimensionHistory.create(
         url: params[:url],
         datetime: api_result["datetime"],
@@ -24,42 +20,34 @@ class DimensionHistoriesController < ApplicationController
         height: api_result["height"],
         weight: api_result["weight"]
       )
-
-      # Lấy tất cả kết quả từ bảng DimensionHistory để hiển thị
-      @dimension_histories = DimensionHistory.all
+  
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.append('result-section', partial: 'dimension_histories/result', locals: { data: api_result }) }
+        format.html { 
+          load_dimensions
+          flash[:notice] = 'Kết quả đã được lưu vào cơ sở dữ liệu.'
+          redirect_to root_path 
+        }
+      end
     else
-      # Xử lý khi không có kết quả
-      flash[:alert] = 'Không thể lấy kết quả'
+      flash[:alert] = 'Không thể lấy kết quả.'
       redirect_to root_path
     end
-
-    # Hiển thị JSON đẹp mắt
-    @api_result = api_result.present? ? JSON.pretty_generate(api_result) : nil
-    respond_to do |format|
-      format.json { render json: @api_result }  # Sửa lại để trả về @api_result
-      format.js   # Phản hồi định dạng JavaScript
-    end
-  rescue StandardError => e
-    # Ghi log cho lỗi
-    puts "Lỗi : #{e.message}"
-    flash[:alert] = 'Có lỗi.'
-    redirect_to root_path
-  end
-
+  end  
+  
   private
 
   def load_dimensions
-    # Lấy tất cả kết quả từ bảng DimensionHistory để hiển thị
-    @dimension_histories = DimensionHistory.all
+    @dimension_histories = DimensionHistory.order(datetime: :desc)
   end
 
   def generate_random_json(height, width, length, weight)
-    # Tạo dữ liệu mẫu ngẫu nhiên từ các giá trị nhập vào
+    temp = rand(2)
     data = {
       "datetime" => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
       "mac_address" => generate_random_mac_address,
-      "result_code" => rand(2),  # Assume result_code can be 0 or 1
-      "result_name" => (rand(2) == 0 ? "Success" : "Failure"),
+      "result_code" => temp,
+      "result_name" => (temp == 0 ? "Success" : "Failure"),
       "width" => "#{width}cm",
       "length" => "#{length}cm",
       "height" => "#{height}cm",
@@ -70,7 +58,6 @@ class DimensionHistoriesController < ApplicationController
   end
 
   def generate_random_mac_address
-    # Tạo địa chỉ MAC ngẫu nhiên
     mac_address = (0..5).map { '%02x' % rand(256) }.join(':')
     return mac_address
   end
