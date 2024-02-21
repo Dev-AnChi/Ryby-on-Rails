@@ -1,4 +1,3 @@
-// app/javascript/controllers/dimension-form_controller.js
 import { Controller } from "stimulus";
 
 export default class extends Controller {
@@ -7,7 +6,7 @@ export default class extends Controller {
   submit(event) {
     event.preventDefault();
     const form = this.element;
-  
+
     fetch(form.action, {
       method: form.method,
       body: new FormData(form),
@@ -19,11 +18,17 @@ export default class extends Controller {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.json();
+      return response.text();
     })
-    .then(data => {
-      console.log(data); // Kiểm tra xem data được trả về từ server là gì
-      this.resultSectionTarget.innerHTML = `<h2>Result:</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
+    .then(html => {
+      const turboStreamElement = document.createElement('template');
+      turboStreamElement.innerHTML = html;
+      const turboStream = turboStreamElement.content.querySelector('turbo-stream');
+
+      if (turboStream) {
+        document.body.appendChild(turboStream);
+      }
+      
       form.reset();
     })
     .catch(error => {
@@ -31,5 +36,4 @@ export default class extends Controller {
       alert('Lỗi khi gửi biểu mẫu.');
     });
   }
-  
 }

@@ -7,7 +7,7 @@ class DimensionHistoriesController < ApplicationController
 
   def get_dimensions
     api_result = generate_random_json(params[:height], params[:width], params[:length], params[:weight])
-
+  
     if api_result.present?
       @dimension_history = DimensionHistory.create(
         url: params[:url],
@@ -20,16 +20,21 @@ class DimensionHistoriesController < ApplicationController
         height: api_result["height"],
         weight: api_result["weight"]
       )
-
-      load_dimensions
-      flash[:notice] = 'Kết quả đã được lưu vào cơ sở dữ liệu.'
+  
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.append('result-section', partial: 'dimension_histories/result', locals: { data: api_result }) }
+        format.html { 
+          load_dimensions
+          flash[:notice] = 'Kết quả đã được lưu vào cơ sở dữ liệu.'
+          redirect_to root_path 
+        }
+      end
     else
       flash[:alert] = 'Không thể lấy kết quả.'
+      redirect_to root_path
     end
-
-    redirect_to root_path
-  end
-
+  end  
+  
   private
 
   def load_dimensions
